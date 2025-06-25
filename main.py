@@ -1,31 +1,22 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI
 from trading import execute_trade, get_account_info
-from models import TradeRequest
-from datetime import datetime
+from pydantic import BaseModel
 
 app = FastAPI()
-templates = Jinja2Templates(directory="templates")
 
-signals_log = []
+# Modèle de requête pour les trades
+class TradeRequest(BaseModel):
+    asset: str
+    direction: str  # "call" ou "put"
+    amount: float
 
-@app.post("/trade")
-def trade(req: TradeRequest):
-    result = execute_trade(req.asset, req.direction, req.amount)
-    signals_log.append({
-        "asset": req.asset,
-        "direction": req.direction,
-        "amount": req.amount,
-        "result": result,
-        "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    })
-    return result
-
+# Endpoint pour vérifier le compte
 @app.get("/status")
 def status():
     return get_account_info()
 
-@app.get("/dashboard", response_class=HTMLResponse)
-def dashboard(request: Request):
-    return templates.TemplateResponse("dashboard.html", {"request": request, "signals": signals_log})
+# Endpoint pour exécuter un trade
+@app.post("/trade")
+def trade(req: TradeRequest):
+    result = execute_trade(req.asset, req.direction, req.amount)
+    return {"result": result}
