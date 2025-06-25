@@ -1,3 +1,3 @@
 # Ajoute tes identifiants ici
-POCKET_OPTION_EMAIL = "ton@email.com"
-POCKET_OPTION_PASSWORD = "ton_mot_de_passe"
+POCKET_OPTION_EMAIL = claralala1256@gmail.com 
+POCKET_OPTION_PASSWORD = Cathalina12?!
